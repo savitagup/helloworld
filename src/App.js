@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import biopic from './biopic.jpg';
+import request from 'superagent';
 
 import ToDoItems from './ToDoItems.js';
 
@@ -18,7 +19,7 @@ class App extends Component {
             <ToDoItems/>
            <Biography />
            <GroceryList/>
-
+          
            <li>{list[1]}</li>
            
            <p> Map of Grocery List</p>
@@ -38,6 +39,7 @@ class App extends Component {
               Click me !!!!!!
            </button>
 
+           
           </div>
     );
     }
@@ -95,9 +97,39 @@ class ShowDateTime extends React.Component {
        return(
          <div>
            <h2>{this.state.curTime}</h2>
-           
+           <ShowQuote/>
          </div>
        );
      }
    }
+
+
+class ShowQuote extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      randomQuote : null,
+      author : null
+    }
+  }
+  componentDidMount(){
+    request.get('https://talaikis.com/api/quotes/random/').end((error, result)=> {
+      this.setState({
+        randomQuote: result.body.quote,
+        author : result.body.author
+      })
+    });
+  }
+
+  render() {
+    return(
+      <div>
+        <hr />
+        <h3>{this.state.randomQuote} --- {this.state.author}</h3>
+        <hr />
+      </div>
+    );
+  }
+}
+
 export default App;
